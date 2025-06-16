@@ -26,7 +26,10 @@ public class LogAspect {
     private final AuthTokenExtractor<String> authTokenExtractor;
     private final AuthTokenProvider authTokenProvider;
 
-    @Pointcut("execution(* roomescape..*(..))")
+    //    @Pointcut("execution(* roomescape..*(..))")
+//    public void all() {
+//    }
+    @Pointcut("@annotation(roomescape.log.Loggable)")
     public void all() {
     }
 
