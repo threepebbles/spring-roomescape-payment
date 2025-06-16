@@ -53,10 +53,6 @@ public class LogAspect {
     public Object logRequestInfo(final ProceedingJoinPoint joinPoint) throws Throwable {
         final ServletRequestAttributes attributes =
                 (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (attributes == null) {
-            log.debug("[REQUEST] No request context available");
-            return joinPoint.proceed();
-        }
         final HttpServletRequest request = attributes.getRequest();
 
         try {
