@@ -1,6 +1,6 @@
 package roomescape.reservation.application;
 
-import static roomescape.reservation.domain.ReservationStatus.BOOKED;
+import static roomescape.reservation.domain.ReservationStatus.PENDING_PAYMENT;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,7 +22,7 @@ import roomescape.reservation.domain.ReservationTime;
 import roomescape.reservation.domain.repository.ReservationRepository;
 import roomescape.reservation.domain.repository.ReservationTimeRepository;
 import roomescape.reservation.ui.dto.request.AvailableReservationTimeRequest;
-import roomescape.reservation.ui.dto.request.CreateBookedReservationWithPaymentRequest;
+import roomescape.reservation.ui.dto.request.CreateReservationWithPaymentRequest;
 import roomescape.reservation.ui.dto.response.AvailableReservationTimeResponse;
 import roomescape.reservation.ui.dto.response.ReservationResponse;
 import roomescape.theme.domain.Theme;
@@ -40,7 +40,7 @@ public class ReservationService {
 
     @Transactional
     public ReservationResponse create(
-            final CreateBookedReservationWithPaymentRequest request,
+            final CreateReservationWithPaymentRequest request,
             final Long memberId
     ) {
         final ReservationTime time = getReservationTime(request.date(), request.timeId());
@@ -70,7 +70,7 @@ public class ReservationService {
             throw new AlreadyExistException("해당 예약 슬롯에 예약이 있습니다.");
         }
 
-        final Reservation reservation = Reservation.of(reservationSlot, member, payment, BOOKED);
+        final Reservation reservation = Reservation.of(reservationSlot, member, payment, PENDING_PAYMENT);
 
         return reservationRepository.save(reservation);
     }

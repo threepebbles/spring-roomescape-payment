@@ -7,7 +7,7 @@ import static roomescape.fixture.domain.ReservationTimeFixture.notSavedReservati
 import static roomescape.fixture.domain.ReservationTimeFixture.notSavedReservationTime3;
 import static roomescape.fixture.domain.ThemeFixture.notSavedTheme1;
 import static roomescape.fixture.domain.ThemeFixture.notSavedTheme2;
-import static roomescape.reservation.domain.ReservationStatus.BOOKED;
+import static roomescape.reservation.domain.ReservationStatus.PENDING_PAYMENT;
 import static roomescape.reservation.domain.ReservationStatus.values;
 
 import java.time.LocalDate;
@@ -78,7 +78,7 @@ class AdminReservationServiceTest {
                     softly.assertThat(response.time().id()).isEqualTo(timeId);
                     softly.assertThat(response.theme().id()).isEqualTo(themeId);
                     softly.assertThat(response.member().id()).isEqualTo(member.getId());
-                    softly.assertThat(response.status()).isEqualTo(BOOKED.getDescription());
+                    softly.assertThat(response.status()).isEqualTo(PENDING_PAYMENT.getDescription());
                 }
         );
     }
@@ -109,7 +109,7 @@ class AdminReservationServiceTest {
 
         reservationRepository.save(
                 Reservation.offlinePaid(ReservationSlot.of(date, reservationTime, theme), member,
-                        BOOKED));
+                        PENDING_PAYMENT));
 
         final CreateBookedReservationRequest request =
                 new CreateBookedReservationRequest(date, reservationTime.getId(), theme.getId(), member.getId());
@@ -128,7 +128,7 @@ class AdminReservationServiceTest {
         final Member member = memberRepository.save(notSavedMember1());
         final ReservationSlot slot = ReservationSlot.of(date, time, theme);
         final Reservation reservation = reservationRepository.save(
-                Reservation.offlinePaid(slot, member, BOOKED));
+                Reservation.offlinePaid(slot, member, PENDING_PAYMENT));
 
         // when
         adminReservationService.deleteAsAdmin(reservation.getId());
@@ -163,10 +163,10 @@ class AdminReservationServiceTest {
         final Theme theme2 = themeRepository.save(notSavedTheme2());
 
         reservationRepository.save(
-                Reservation.offlinePaid(ReservationSlot.of(date1, time1, theme1), member, BOOKED)
+                Reservation.offlinePaid(ReservationSlot.of(date1, time1, theme1), member, PENDING_PAYMENT)
         );
         reservationRepository.save(
-                Reservation.offlinePaid(ReservationSlot.of(date2, time2, theme2), member, BOOKED)
+                Reservation.offlinePaid(ReservationSlot.of(date2, time2, theme2), member, PENDING_PAYMENT)
         );
 
         // when
@@ -190,11 +190,11 @@ class AdminReservationServiceTest {
         final LocalDate date3 = LocalDate.now().plusDays(3);
 
         reservationRepository.save(
-                Reservation.offlinePaid(ReservationSlot.of(date1, time1, theme), member, BOOKED));
+                Reservation.offlinePaid(ReservationSlot.of(date1, time1, theme), member, PENDING_PAYMENT));
         reservationRepository.save(
-                Reservation.offlinePaid(ReservationSlot.of(date2, time2, theme), member, BOOKED));
+                Reservation.offlinePaid(ReservationSlot.of(date2, time2, theme), member, PENDING_PAYMENT));
         reservationRepository.save(
-                Reservation.offlinePaid(ReservationSlot.of(date3, time3, theme), member, BOOKED));
+                Reservation.offlinePaid(ReservationSlot.of(date3, time3, theme), member, PENDING_PAYMENT));
 
         final FilteredReservationsRequest request1 =
                 new FilteredReservationsRequest(theme.getId(), member.getId(), date1, date2);

@@ -12,7 +12,7 @@ import static roomescape.fixture.domain.ReservationTimeFixture.notSavedReservati
 import static roomescape.fixture.domain.ReservationTimeFixture.notSavedReservationTime2;
 import static roomescape.fixture.domain.ThemeFixture.notSavedTheme1;
 import static roomescape.fixture.domain.ThemeFixture.notSavedTheme2;
-import static roomescape.reservation.domain.ReservationStatus.BOOKED;
+import static roomescape.reservation.domain.ReservationStatus.PENDING_PAYMENT;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -41,7 +41,7 @@ import roomescape.reservation.domain.ReservationTime;
 import roomescape.reservation.domain.repository.ReservationRepository;
 import roomescape.reservation.domain.repository.ReservationTimeRepository;
 import roomescape.reservation.ui.dto.request.AvailableReservationTimeRequest;
-import roomescape.reservation.ui.dto.request.CreateBookedReservationWithPaymentRequest;
+import roomescape.reservation.ui.dto.request.CreateReservationWithPaymentRequest;
 import roomescape.reservation.ui.dto.response.AvailableReservationTimeResponse;
 import roomescape.reservation.ui.dto.response.ReservationResponse.ForMember;
 import roomescape.theme.domain.Theme;
@@ -81,8 +81,8 @@ class ReservationServiceTest {
         final Long themeId = themeRepository.save(notSavedTheme1()).getId();
         final Member member = memberRepository.save(notSavedMember1());
 
-        final CreateBookedReservationWithPaymentRequest request =
-                new CreateBookedReservationWithPaymentRequest(date, timeId, themeId,
+        final CreateReservationWithPaymentRequest request =
+                new CreateReservationWithPaymentRequest(date, timeId, themeId,
                         PAYMENT_KEY, ORDER_ID, AMOUNT);
 
         // when & then
@@ -98,8 +98,8 @@ class ReservationServiceTest {
         final Long themeId = themeRepository.save(notSavedTheme1()).getId();
         final Member member = memberRepository.save(notSavedMember1());
 
-        final CreateBookedReservationWithPaymentRequest request =
-                new CreateBookedReservationWithPaymentRequest(date, timeId, themeId,
+        final CreateReservationWithPaymentRequest request =
+                new CreateReservationWithPaymentRequest(date, timeId, themeId,
                         PAYMENT_KEY, ORDER_ID, AMOUNT);
 
         // when & then
@@ -115,14 +115,14 @@ class ReservationServiceTest {
         final Theme theme = themeRepository.save(notSavedTheme1());
         final Member member = memberRepository.save(notSavedMember1());
 
-        final CreateBookedReservationWithPaymentRequest request =
-                new CreateBookedReservationWithPaymentRequest(date, time.getId(), theme.getId(),
+        final CreateReservationWithPaymentRequest request =
+                new CreateReservationWithPaymentRequest(date, time.getId(), theme.getId(),
                         PAYMENT_KEY, ORDER_ID, AMOUNT);
         final MemberAuthInfo memberAuthInfo =
                 new MemberAuthInfo(member.getId(), member.getRole());
 
         reservationRepository.save(
-                Reservation.offlinePaid(ReservationSlot.of(date, time, theme), member, BOOKED));
+                Reservation.offlinePaid(ReservationSlot.of(date, time, theme), member, PENDING_PAYMENT));
 
         // when & then
         Assertions.assertThatThrownBy(() -> reservationService.create(request, memberAuthInfo.id()))
@@ -139,7 +139,7 @@ class ReservationServiceTest {
 
         final Reservation reservation = Reservation.offlinePaid(ReservationSlot.of(date, time1, theme1),
                 member1,
-                BOOKED);
+                PENDING_PAYMENT);
         final Long reservationId = reservationRepository.save(reservation).getId();
         final MemberAuthInfo member1AuthInfo = new MemberAuthInfo(member1.getId(), member1.getRole());
 
@@ -160,7 +160,7 @@ class ReservationServiceTest {
 
         final Reservation reservation = Reservation.offlinePaid(ReservationSlot.of(date, time1, theme1),
                 member1,
-                BOOKED);
+                PENDING_PAYMENT);
         final Long reservationId = reservationRepository.save(reservation).getId();
         final MemberAuthInfo member2AuthInfo = new MemberAuthInfo(member2.getId(), member2.getRole());
 
@@ -179,7 +179,7 @@ class ReservationServiceTest {
 
         final Reservation reservation = Reservation.offlinePaid(ReservationSlot.of(date, time1, theme1),
                 member1,
-                BOOKED);
+                PENDING_PAYMENT);
         reservationRepository.save(reservation);
         final MemberAuthInfo member1AuthInfo = new MemberAuthInfo(member1.getId(), member1.getRole());
 
@@ -204,7 +204,7 @@ class ReservationServiceTest {
                 .filter(AvailableReservationTimeResponse::alreadyBooked)
                 .count();
         reservationRepository.save(
-                Reservation.offlinePaid(ReservationSlot.of(date, time1, theme), member, BOOKED));
+                Reservation.offlinePaid(ReservationSlot.of(date, time1, theme), member, PENDING_PAYMENT));
 
         // when
         final long afterCount = reservationService.findAvailableReservationTimes(request)
@@ -229,10 +229,10 @@ class ReservationServiceTest {
         final Theme theme2 = themeRepository.save(notSavedTheme2());
 
         reservationRepository.save(
-                Reservation.offlinePaid(ReservationSlot.of(date1, time1, theme1), member, BOOKED));
+                Reservation.offlinePaid(ReservationSlot.of(date1, time1, theme1), member, PENDING_PAYMENT));
 
         reservationRepository.save(
-                Reservation.offlinePaid(ReservationSlot.of(date2, time2, theme2), member, BOOKED));
+                Reservation.offlinePaid(ReservationSlot.of(date2, time2, theme2), member, PENDING_PAYMENT));
 
         // when
         final List<ForMember> founds = reservationService.findReservationsByMemberId(member.getId());

@@ -33,11 +33,11 @@ import roomescape.auth.ui.dto.LoginRequest;
 import roomescape.fixture.ui.LoginApiFixture;
 import roomescape.member.ui.dto.MemberResponse;
 import roomescape.member.ui.dto.SignUpRequest;
-import roomescape.payment.domain.PaymentClient;
 import roomescape.payment.domain.Payment;
+import roomescape.payment.domain.PaymentClient;
 import roomescape.reservation.domain.ReservationStatus;
 import roomescape.reservation.ui.dto.request.CreateBookedReservationRequest;
-import roomescape.reservation.ui.dto.request.CreateBookedReservationWithPaymentRequest;
+import roomescape.reservation.ui.dto.request.CreateReservationWithPaymentRequest;
 import roomescape.reservation.ui.dto.response.ReservationStatusResponse;
 import roomescape.reservation.ui.dto.response.ReservationTimeResponse;
 import roomescape.theme.ui.dto.ThemeResponse;
@@ -116,7 +116,7 @@ class AdminReservationRestControllerTest {
         final Map<String, String> memberCookies = memberLoginAndGetCookies(
                 new LoginRequest(signUpRequest.email(), signUpRequest.password()));
         final Map<String, String> adminCookies = adminLoginAndGetCookies();
-        final CreateBookedReservationWithPaymentRequest request = bookedReservationWithPaymentRequest();
+        final CreateReservationWithPaymentRequest request = bookedReservationWithPaymentRequest();
 
         // member 예약 추가
         final Integer reservationId = RestAssured.given().log().all()
@@ -215,11 +215,11 @@ class AdminReservationRestControllerTest {
         assertThat(responses).hasSize(ReservationStatus.values().length);
     }
 
-    private CreateBookedReservationWithPaymentRequest bookedReservationWithPaymentRequest() {
+    private CreateReservationWithPaymentRequest bookedReservationWithPaymentRequest() {
         final Long timeId = createReservationTimeResponses.get(0).id();
         final Long themeId = createThemeResponses.get(0).id();
 
-        return new CreateBookedReservationWithPaymentRequest(
+        return new CreateReservationWithPaymentRequest(
                 date, timeId, themeId,
                 PAYMENT_KEY, ORDER_ID, AMOUNT
         );

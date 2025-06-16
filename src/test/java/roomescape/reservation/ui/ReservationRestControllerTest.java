@@ -33,9 +33,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import roomescape.auth.ui.dto.LoginRequest;
 import roomescape.member.ui.dto.SignUpRequest;
-import roomescape.payment.domain.PaymentClient;
 import roomescape.payment.domain.Payment;
-import roomescape.reservation.ui.dto.request.CreateBookedReservationWithPaymentRequest;
+import roomescape.payment.domain.PaymentClient;
+import roomescape.reservation.ui.dto.request.CreateReservationWithPaymentRequest;
 import roomescape.reservation.ui.dto.response.AvailableReservationTimeResponse;
 import roomescape.reservation.ui.dto.response.ReservationTimeResponse;
 import roomescape.theme.ui.dto.ThemeResponse;
@@ -73,7 +73,7 @@ class ReservationRestControllerTest {
         final SignUpRequest signUpRequest = signUpRequest1();
         final Map<String, String> memberCookies = memberLoginAndGetCookies(
                 new LoginRequest(signUpRequest.email(), signUpRequest.password()));
-        final CreateBookedReservationWithPaymentRequest request = bookedReservationRequest1();
+        final CreateReservationWithPaymentRequest request = bookedReservationRequest1();
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -89,7 +89,7 @@ class ReservationRestControllerTest {
         final SignUpRequest signUpRequest = signUpRequest1();
         final Map<String, String> memberCookies = memberLoginAndGetCookies(
                 new LoginRequest(signUpRequest.email(), signUpRequest.password()));
-        final CreateBookedReservationWithPaymentRequest reservationParams = pastBookedReservationRequest();
+        final CreateReservationWithPaymentRequest reservationParams = pastBookedReservationRequest();
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -102,7 +102,7 @@ class ReservationRestControllerTest {
 
     @Test
     void 로그인_상태가_아니면_예약을_추가할_수_없다() {
-        final CreateBookedReservationWithPaymentRequest reservationParams = bookedReservationRequest1();
+        final CreateReservationWithPaymentRequest reservationParams = bookedReservationRequest1();
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -118,7 +118,7 @@ class ReservationRestControllerTest {
         final SignUpRequest signUpRequest = signUpRequest1();
         final Map<String, String> memberCookies = memberLoginAndGetCookies(
                 new LoginRequest(signUpRequest.email(), signUpRequest.password()));
-        final CreateBookedReservationWithPaymentRequest reservationParams = bookedReservationRequest1();
+        final CreateReservationWithPaymentRequest reservationParams = bookedReservationRequest1();
 
         // member가 예약 추가
         final Integer reservationId = RestAssured.given().log().all()
@@ -174,7 +174,7 @@ class ReservationRestControllerTest {
         final SignUpRequest signUpRequest = signUpRequest1();
         final Map<String, String> memberCookies = memberLoginAndGetCookies(
                 new LoginRequest(signUpRequest.email(), signUpRequest.password()));
-        final CreateBookedReservationWithPaymentRequest reservationParams = bookedReservationRequest1();
+        final CreateReservationWithPaymentRequest reservationParams = bookedReservationRequest1();
 
         final int sizeBeforeCreate = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -213,8 +213,8 @@ class ReservationRestControllerTest {
         final Map<String, String> member2Cookies = memberLoginAndGetCookies(
                 new LoginRequest(signUpRequest2.email(), signUpRequest2.password()));
 
-        final CreateBookedReservationWithPaymentRequest reservationParams1 = bookedReservationRequest1();
-        final CreateBookedReservationWithPaymentRequest reservationParams2 = bookedReservationRequest2();
+        final CreateReservationWithPaymentRequest reservationParams1 = bookedReservationRequest1();
+        final CreateReservationWithPaymentRequest reservationParams2 = bookedReservationRequest2();
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -256,7 +256,7 @@ class ReservationRestControllerTest {
         final SignUpRequest signUpRequest = signUpRequest1();
         final Map<String, String> memberCookies = memberLoginAndGetCookies(
                 new LoginRequest(signUpRequest.email(), signUpRequest.password()));
-        final CreateBookedReservationWithPaymentRequest reservationParams1 = bookedReservationRequest1();
+        final CreateReservationWithPaymentRequest reservationParams1 = bookedReservationRequest1();
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -266,7 +266,7 @@ class ReservationRestControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
-        final CreateBookedReservationWithPaymentRequest reservationParams2 = bookedReservationRequest2();
+        final CreateReservationWithPaymentRequest reservationParams2 = bookedReservationRequest2();
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -286,32 +286,32 @@ class ReservationRestControllerTest {
                 .body("size()", is(2));
     }
 
-    private CreateBookedReservationWithPaymentRequest bookedReservationRequest1() {
+    private CreateReservationWithPaymentRequest bookedReservationRequest1() {
         final Long timeId = createReservationTimeResponses.get(0).id();
         final Long themeId = createThemeResponses.get(0).id();
 
-        return new CreateBookedReservationWithPaymentRequest(
+        return new CreateReservationWithPaymentRequest(
                 date, timeId, themeId,
                 PAYMENT_KEY, ORDER_ID, AMOUNT
         );
     }
 
-    private CreateBookedReservationWithPaymentRequest bookedReservationRequest2() {
+    private CreateReservationWithPaymentRequest bookedReservationRequest2() {
         final Long timeId = createReservationTimeResponses.get(1).id();
         final Long themeId = createThemeResponses.get(0).id();
 
-        return new CreateBookedReservationWithPaymentRequest(
+        return new CreateReservationWithPaymentRequest(
                 date, timeId, themeId,
                 PAYMENT_KEY, ORDER_ID, AMOUNT
         );
     }
 
-    private CreateBookedReservationWithPaymentRequest pastBookedReservationRequest() {
+    private CreateReservationWithPaymentRequest pastBookedReservationRequest() {
         final LocalDate date = LocalDate.now().minusDays(5);
         final Long timeId = createReservationTimeResponses.get(0).id();
         final Long themeId = createThemeResponses.get(0).id();
 
-        return new CreateBookedReservationWithPaymentRequest(
+        return new CreateReservationWithPaymentRequest(
                 date, timeId, themeId,
                 PAYMENT_KEY, ORDER_ID, AMOUNT
         );

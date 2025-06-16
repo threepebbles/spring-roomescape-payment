@@ -22,7 +22,7 @@ import roomescape.auth.domain.MemberAuthInfo;
 import roomescape.auth.domain.RequiresRole;
 import roomescape.reservation.application.ReservationService;
 import roomescape.reservation.ui.dto.request.AvailableReservationTimeRequest;
-import roomescape.reservation.ui.dto.request.CreateBookedReservationWithPaymentRequest;
+import roomescape.reservation.ui.dto.request.CreateReservationWithPaymentRequest;
 import roomescape.reservation.ui.dto.response.AvailableReservationTimeResponse;
 import roomescape.reservation.ui.dto.response.ReservationResponse;
 
@@ -38,7 +38,7 @@ public class ReservationRestController {
     @RequiresRole(authRoles = {ADMIN, MEMBER})
     @Operation(summary = "회원 권한의 결제 후 예약 추가")
     public ResponseEntity<ReservationResponse> createReservation(
-            @RequestBody @Valid final CreateBookedReservationWithPaymentRequest request,
+            @RequestBody @Valid final CreateReservationWithPaymentRequest request,
             final MemberAuthInfo memberAuthInfo
     ) {
         final ReservationResponse response =

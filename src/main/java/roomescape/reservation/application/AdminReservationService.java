@@ -1,6 +1,6 @@
 package roomescape.reservation.application;
 
-import static roomescape.reservation.domain.ReservationStatus.BOOKED;
+import static roomescape.reservation.domain.ReservationStatus.PENDING_PAYMENT;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -60,7 +60,7 @@ public class AdminReservationService {
             throw new AlreadyExistException("해당 예약 슬롯에 예약이 있습니다.");
         }
 
-        final Reservation reservation = Reservation.offlinePaid(reservationSlot, member, BOOKED);
+        final Reservation reservation = Reservation.offlinePaid(reservationSlot, member, PENDING_PAYMENT);
 
         return reservationRepository.save(reservation);
     }

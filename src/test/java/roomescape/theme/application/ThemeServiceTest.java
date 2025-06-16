@@ -3,7 +3,7 @@ package roomescape.theme.application;
 
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static roomescape.fixture.domain.MemberFixture.notSavedMember1;
-import static roomescape.reservation.domain.ReservationStatus.BOOKED;
+import static roomescape.reservation.domain.ReservationStatus.PENDING_PAYMENT;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -152,7 +152,7 @@ class ThemeServiceTest {
                                 ReservationSlot.of(now.minusDays(themeIndex), times.get(timeIndex),
                                         themes.get(themeIndex)),
                                 member,
-                                BOOKED
+                                PENDING_PAYMENT
                         )
                 );
             }
@@ -164,7 +164,7 @@ class ThemeServiceTest {
                     Reservation.offlinePaid(
                             ReservationSlot.of(weekAgo.minusDays(2), times.get(timeIndex), themes.get(5)),
                             member,
-                            BOOKED
+                            PENDING_PAYMENT
                     )
             );
         }
@@ -175,7 +175,7 @@ class ThemeServiceTest {
                     Reservation.offlinePaid(
                             ReservationSlot.of(now.plusDays(timeIndex), times.get(timeIndex), themes.get(6)),
                             member,
-                            BOOKED
+                            PENDING_PAYMENT
                     )
             );
         }

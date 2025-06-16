@@ -4,7 +4,7 @@ import static roomescape.fixture.domain.MemberFixture.notSavedMember1;
 import static roomescape.fixture.domain.MemberFixture.notSavedMember2;
 import static roomescape.fixture.domain.ReservationTimeFixture.notSavedReservationTime1;
 import static roomescape.fixture.domain.ThemeFixture.notSavedTheme1;
-import static roomescape.reservation.domain.ReservationStatus.BOOKED;
+import static roomescape.reservation.domain.ReservationStatus.PENDING_PAYMENT;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -231,7 +231,7 @@ class AdminWaitingServiceTest {
             final Member member
     ) {
         reservationRepository.save(
-                Reservation.offlinePaid(ReservationSlot.of(date, time, theme), member, BOOKED)
+                Reservation.offlinePaid(ReservationSlot.of(date, time, theme), member, PENDING_PAYMENT)
         );
     }
 }
