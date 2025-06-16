@@ -2,13 +2,13 @@ package roomescape.fixture.config;
 
 
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import roomescape.member.application.MemberService;
 import roomescape.member.domain.MemberRepository;
 import roomescape.member.infrastructure.JpaMemberRepository;
 import roomescape.member.infrastructure.MemberRepositoryImpl;
-import roomescape.payment.domain.PaymentDomainService;
 import roomescape.reservation.application.AdminReservationService;
 import roomescape.reservation.application.AdminWaitingService;
 import roomescape.reservation.application.ReservationService;
@@ -135,14 +135,14 @@ public class TestConfig {
             final ThemeRepository themeRepository,
             final MemberRepository memberRepository,
             final ReservationRepository reservationRepository,
-            final PaymentDomainService paymentDomainService
+            final ApplicationEventPublisher applicationEventPublisher
     ) {
         return new ReservationService(
                 reservationTimeRepository,
                 themeRepository,
                 memberRepository,
                 reservationRepository,
-                paymentDomainService
+                applicationEventPublisher
         );
     }
 

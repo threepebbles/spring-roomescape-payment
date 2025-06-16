@@ -9,7 +9,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.UnknownContentTypeException;
 import roomescape.exception.payment.PaymentException;
-import roomescape.payment.domain.Payment;
+import roomescape.payment.domain.PaymentApproveRequest;
 import roomescape.payment.domain.PaymentClient;
 
 public class TossPaymentClient implements PaymentClient {
@@ -28,8 +28,8 @@ public class TossPaymentClient implements PaymentClient {
         this.restClient = restClient;
     }
 
-    public void approvePayment(final Payment payment) {
-        final TossPaymentApproveRequest request = TossPaymentApproveRequest.from(payment);
+    public void approvePayment(final PaymentApproveRequest paymentApproveRequest) {
+        final TossPaymentApproveRequest request = TossPaymentApproveRequest.from(paymentApproveRequest);
         final String encodedSecretKey = getEncodedSecretKey();
 
         try {

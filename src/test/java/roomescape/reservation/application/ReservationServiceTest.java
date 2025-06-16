@@ -33,7 +33,7 @@ import roomescape.exception.resource.ResourceNotFoundException;
 import roomescape.fixture.config.TestConfig;
 import roomescape.member.domain.Member;
 import roomescape.member.domain.MemberRepository;
-import roomescape.payment.domain.Payment;
+import roomescape.payment.domain.PaymentApproveRequest;
 import roomescape.payment.domain.PaymentClient;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.ReservationSlot;
@@ -70,7 +70,7 @@ class ReservationServiceTest {
     void setUp() {
         doNothing()
                 .when(paymentClient)
-                .approvePayment(any(Payment.class));
+                .approvePayment(any(PaymentApproveRequest.class));
     }
 
     @Test

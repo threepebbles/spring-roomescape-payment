@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum ReservationStatus {
 
     PENDING_PAYMENT("결제 대기"),
-    PAID("결제 완료"),
+    PAYMENT_FAILED("결제 실패"),
+    PAYMENT_COMPLETED("결제 완료"),
     ;
 
     private final String description;

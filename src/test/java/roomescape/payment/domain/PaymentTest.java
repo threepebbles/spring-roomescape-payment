@@ -15,7 +15,7 @@ class PaymentTest {
         final Long amount = 10000L;
 
         // when & then
-        Assertions.assertThatThrownBy(() -> Payment.of(paymentKey, orderId, amount))
+        Assertions.assertThatThrownBy(() -> Payment.ofPendingPayment(paymentKey, orderId, amount))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -27,7 +27,7 @@ class PaymentTest {
         final Long amount = 10000L;
 
         // when & then
-        Assertions.assertThatThrownBy(() -> Payment.of(paymentKey, orderId, amount))
+        Assertions.assertThatThrownBy(() -> Payment.ofPendingPayment(paymentKey, orderId, amount))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -39,7 +39,7 @@ class PaymentTest {
         final Long amount = 10000L;
 
         // when & then
-        Assertions.assertThatThrownBy(() -> Payment.of(paymentKey, orderId, amount))
+        Assertions.assertThatThrownBy(() -> Payment.ofPendingPayment(paymentKey, orderId, amount))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -51,7 +51,7 @@ class PaymentTest {
         final Long amount = 10000L;
 
         // when & then
-        Assertions.assertThatThrownBy(() -> Payment.of(paymentKey, orderId, amount))
+        Assertions.assertThatThrownBy(() -> Payment.ofPendingPayment(paymentKey, orderId, amount))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -63,7 +63,7 @@ class PaymentTest {
         final Long amount = null;
 
         // when & then
-        Assertions.assertThatThrownBy(() -> Payment.of(paymentKey, orderId, amount))
+        Assertions.assertThatThrownBy(() -> Payment.ofPendingPayment(paymentKey, orderId, amount))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -75,7 +75,7 @@ class PaymentTest {
         final Long amount = -1000L;
 
         // when & then
-        Assertions.assertThatThrownBy(() -> Payment.of(paymentKey, orderId, amount))
+        Assertions.assertThatThrownBy(() -> Payment.ofPendingPayment(paymentKey, orderId, amount))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

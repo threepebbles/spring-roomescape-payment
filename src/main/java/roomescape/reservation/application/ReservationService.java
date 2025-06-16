@@ -8,6 +8,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.exception.auth.AuthorizationException;
@@ -15,7 +16,7 @@ import roomescape.exception.resource.AlreadyExistException;
 import roomescape.member.domain.Member;
 import roomescape.member.domain.MemberRepository;
 import roomescape.payment.domain.Payment;
-import roomescape.payment.domain.PaymentDomainService;
+import roomescape.payment.event.ReservationPaymentRequestEvent;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.ReservationSlot;
 import roomescape.reservation.domain.ReservationTime;
@@ -36,7 +37,7 @@ public class ReservationService {
     private final ThemeRepository themeRepository;
     private final MemberRepository memberRepository;
     private final ReservationRepository reservationRepository;
-    private final PaymentDomainService paymentDomainService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Transactional
     public ReservationResponse create(
@@ -46,18 +47,26 @@ public class ReservationService {
         final ReservationTime time = getReservationTime(request.date(), request.timeId());
         final Theme theme = themeRepository.getById(request.themeId());
         final Member member = memberRepository.getById(memberId);
-        final Payment payment = Payment.of(
+        final Payment payment = Payment.ofPendingPayment(
                 request.paymentKey(),
                 request.orderId(),
                 request.amount()
         );
-        paymentDomainService.approvePayment(payment);
-        final Reservation reservation = createReservedReservation(request.date(), time, theme, member, payment);
+        final Reservation reservation = createPendingReservation(request.date(), time, theme, member, payment);
+
+        applicationEventPublisher.publishEvent(
+                new ReservationPaymentRequestEvent(
+                        reservation.getId(),
+                        request.paymentKey(),
+                        request.orderId(),
+                        request.amount()
+                )
+        );
 
         return ReservationResponse.from(reservation);
     }
 
-    private Reservation createReservedReservation(
+    private Reservation createPendingReservation(
             final LocalDate date,
             final ReservationTime time,
             final Theme theme,

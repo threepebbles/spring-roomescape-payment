@@ -1,5 +1,8 @@
 package roomescape.reservation.domain;
 
+import static roomescape.reservation.domain.ReservationStatus.PAYMENT_COMPLETED;
+import static roomescape.reservation.domain.ReservationStatus.PAYMENT_FAILED;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -38,7 +41,7 @@ public class Reservation {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "payment_id", nullable = false)
     private Payment payment;
 
@@ -72,7 +75,8 @@ public class Reservation {
                 reservationSlot,
                 member,
                 Payment.ofOfflinePayment(),
-                status);
+                status
+        );
     }
 
     public static Reservation of(
@@ -85,11 +89,23 @@ public class Reservation {
                 reservationSlot,
                 member,
                 payment,
-                status);
+                status
+        );
     }
 
     public void updateMember(final Member member) {
+        validateMember(member);
         this.member = member;
+    }
+
+    public void completePayment() {
+        this.payment.complete();
+        this.status = PAYMENT_COMPLETED;
+    }
+
+    public void failPayment() {
+        this.payment.fail();
+        this.status = PAYMENT_FAILED;
     }
 
     private void validateReservationSlot(final ReservationSlot reservationSlot) {

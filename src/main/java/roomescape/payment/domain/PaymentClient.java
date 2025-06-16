@@ -1,6 +1,8 @@
 package roomescape.payment.domain;
 
+import roomescape.exception.payment.PaymentException;
+
 public interface PaymentClient {
 
-    void approvePayment(Payment payment);
+    void approvePayment(PaymentApproveRequest paymentApproveRequest) throws PaymentException;
 }
